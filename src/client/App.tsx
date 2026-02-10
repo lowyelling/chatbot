@@ -44,7 +44,11 @@ function App() {
       <br></br>
       <button onClick={()=>handleSend()}>Send</button>
       <div>
-        placeholder
+        {
+          conversation.map(msg => 
+            <p>{msg.content}</p>
+          )
+        }
       </div>
     </>
   )
