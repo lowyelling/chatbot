@@ -2,6 +2,7 @@ import "./App.css";
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Card,
   CardAction,
@@ -38,36 +39,37 @@ function App() {
         setConversation(prev => [...prev, newMessage])
       })
       .catch(error => console.error('Error:', error))
+    setText("")
   }
 
   return (
-    <>
+    <div className="max-w-2xl mx-auto">
       <h1>Lily's chatbot</h1>
+
+      <ScrollArea className="h-50 w-full rounded-md border p-4">
+        <div className="flex flex-col">
+          {conversation.map((msg, index) => ( 
+              <Card key={index} className={msg.role === "user" ? "self-end": "self-start"}>
+                <CardContent>
+                    <p>{msg.content}</p>
+                </CardContent>
+              </Card>
+          ))}
+        </div>
+      </ScrollArea>
+
       <label id="box">
           Send a message:
         </label>
-      <br></br>
+
       <Textarea
         id="box"
         name="box"
         value={text}
         onChange={(event: React.ChangeEvent<HTMLTextAreaElement>)=>setText(event.target.value)}
       />
-
-      <br></br>
-
-      <div className="flex min-h-svh flex-col items-center justify-center">
+      <div className="flex-col items-center justify-center">
         <Button onClick={()=>handleSend()}>Send</Button>
-      </div>
-
-      <div className="flex flex-col">
-         {conversation.map((msg, index) => ( 
-            <Card key={index} className={msg.role === "user" ? "self-end": "self-start"}>
-              <CardContent>
-                  <p>{msg.content}</p>
-              </CardContent>
-            </Card>
-        ))}
       </div>
 
       {/* <div>
@@ -79,7 +81,7 @@ function App() {
       </div> */}
 
 
-    </>
+    </div>
   )
 }
 
