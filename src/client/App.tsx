@@ -6,6 +6,7 @@ function App() {
   const [conversation, setConversation] = useState<{role: string, content: string}[]>([])
 
   function handleSend(){
+    setConversation(prev => [...prev, {role: 'user', content: text}])
     fetch( '/chat',
       { method: 'POST',
         headers: {"Content-Type": "application/json"},
@@ -23,7 +24,7 @@ function App() {
         console.log('content:',content)
         const newMessage = {role, content};
         console.log('newMessage:', newMessage)
-        setConversation([...conversation, newMessage])
+        setConversation(prev => [...prev, newMessage])
       })
       .catch(error => console.error('Error:', error))
   }
