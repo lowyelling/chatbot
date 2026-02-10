@@ -44,7 +44,9 @@ function App() {
         onChange={(event: React.ChangeEvent<HTMLTextAreaElement>)=>setText(event.target.value)}
       />
       <br></br>
-      <button onClick={()=>handleSend()}>Send</button>
+        <div className="flex min-h-svh flex-col items-center justify-center">
+      <Button onClick={()=>handleSend()}>Send</Button>
+      </div>
       <div>
         {
           conversation.map(msg => 
@@ -52,9 +54,8 @@ function App() {
           )
         }
       </div>
-       <div className="flex min-h-svh flex-col items-center justify-center">
-      <Button>shadcn test</Button>
-    </div>
+
+     
     </>
   )
 }
