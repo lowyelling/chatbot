@@ -46,7 +46,7 @@ function App() {
     <div className="max-w-2xl mx-auto">
       <h1>Lily's chatbot</h1>
 
-      <ScrollArea className="h-50 w-full rounded-md border p-4">
+      <ScrollArea className="h-150 w-full rounded-md border p-4">
         <div className="flex flex-col">
           {conversation.map((msg, index) => ( 
               <Card key={index} className={msg.role === "user" ? "self-end": "self-start"}>
@@ -57,10 +57,6 @@ function App() {
           ))}
         </div>
       </ScrollArea>
-
-      <label id="box">
-          Send a message:
-        </label>
 
       <Textarea
         id="box"
