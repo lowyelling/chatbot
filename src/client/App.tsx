@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
 
 function App() {
   const [text, setText] = useState("")
@@ -37,16 +38,19 @@ function App() {
           Send a message:
         </label>
       <br></br>
-      <textarea
+      <Textarea
         id="box"
         name="box"
         value={text}
         onChange={(event: React.ChangeEvent<HTMLTextAreaElement>)=>setText(event.target.value)}
       />
+
       <br></br>
-        <div className="flex min-h-svh flex-col items-center justify-center">
-      <Button onClick={()=>handleSend()}>Send</Button>
+
+      <div className="flex min-h-svh flex-col items-center justify-center">
+        <Button onClick={()=>handleSend()}>Send</Button>
       </div>
+
       <div>
         {
           conversation.map(msg => 
