@@ -3,11 +3,28 @@ import { useState } from "react";
 
 function App() {
   const [text, setText] = useState("")
-  const [conversation, setConversation] = useState([])
+  const [conversation, setConversation] = useState<{role: string, content: string}[]>([])
 
   function handleSend(){
-    fetch( '/chat',{ method: 'POST'})
-      .then(response => response.json())
+    fetch( '/chat',
+      { method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: text})
+      })
+      .then(response => (
+        console.log('response',response),
+        response.json())
+      )
+      .then(data => {
+        console.log('data',data);
+        const role = data.role;
+        console.log('role:', role);
+        const content = data.content[0].text;
+        console.log('content:',content)
+        const newMessage = {role, content};
+        console.log('newMessage:', newMessage)
+        setConversation([...conversation, newMessage])
+      })
       .catch(error => console.error('Error:', error))
   }
 
@@ -26,7 +43,9 @@ function App() {
       />
       <br></br>
       <button onClick={()=>handleSend()}>Send</button>
-      <div></div>
+      <div>
+        placeholder
+      </div>
     </>
   )
 }
