@@ -1,5 +1,6 @@
 import "./App.css";
 import { useState } from "react";
+import { Button } from "@/components/ui/button"
 
 function App() {
   const [text, setText] = useState("")
@@ -13,17 +14,17 @@ function App() {
         body: JSON.stringify({message: text})
       })
       .then(response => (
-        console.log('response',response),
+        // console.log('response',response),
         response.json())
       )
       .then(data => {
-        console.log('data',data);
+        // console.log('data',data);
         const role = data.role;
         console.log('role:', role);
         const content = data.content[0].text;
-        console.log('content:',content)
+        // console.log('content:',content)
         const newMessage = {role, content};
-        console.log('newMessage:', newMessage)
+        // console.log('newMessage:', newMessage)
         setConversation(prev => [...prev, newMessage])
       })
       .catch(error => console.error('Error:', error))
@@ -51,6 +52,9 @@ function App() {
           )
         }
       </div>
+       <div className="flex min-h-svh flex-col items-center justify-center">
+      <Button>shadcn test</Button>
+    </div>
     </>
   )
 }
