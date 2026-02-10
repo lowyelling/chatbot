@@ -1,36 +1,34 @@
 import "./App.css";
-
 import { useState } from "react";
 
-import reactLogo from "./assets/react.svg";
-
 function App() {
-  const [count, setCount] = useState(0);
+  const [text, setText] = useState("")
+  const [conversation, setConversation] = useState([])
+
+  function handleSend(){
+    fetch( '/chat',{ method: 'POST'})
+      .then(response => response.json())
+      .catch(error => console.error('Error:', error))
+  }
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  );
+    <>
+      <h1>Lily's chatbot</h1>
+      <label id="box">
+          Send a message:
+        </label>
+      <br></br>
+      <textarea
+        id="box"
+        name="box"
+        value={text}
+        onChange={(event: React.ChangeEvent<HTMLTextAreaElement>)=>setText(event.target.value)}
+      />
+      <br></br>
+      <button onClick={()=>handleSend()}>Send</button>
+      <div></div>
+    </>
+  )
 }
 
 export default App;
