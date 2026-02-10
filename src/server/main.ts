@@ -56,10 +56,11 @@ app.post("/chat", (req, res) => {
 
 
 
-// // reset endpoint
-// app.get("/reset", (req, res) => {
-
-// })
+// reset endpoint
+app.get("/reset", (req, res) => {
+  messageHistory = []
+  res.send("cleared messageHistory")
+})
 
 // SDK
 app.get("/hello", (req, res) => {
