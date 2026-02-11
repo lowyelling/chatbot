@@ -2,6 +2,7 @@ import express from "express";
 import ViteExpress from "vite-express";
 import dotenv from "dotenv";
 import Anthropic from "@anthropic-ai/sdk"
+import { type Message } from "./storage"
 
 dotenv.config()
 
@@ -14,10 +15,6 @@ const client = new Anthropic({
 
 app.use(express.json())
 
-export type Message = {
-  role: 'user' | 'assistant';
-  content: string
-}
 
 // declarations outside route to survive between requests
 let messageHistory: Message[] = []

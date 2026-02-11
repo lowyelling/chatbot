@@ -10,7 +10,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Bundler", //change from NodeNext to drop file extensions in my imports
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true, 
