@@ -16,11 +16,22 @@ const client = new Anthropic({
 
 app.use(express.json())
 
-
 // declarations outside route to survive between requests
 // let conversation.messages: Message[] = []
 const storage = new inMemoryStorage()
 
+function createConversationHandler(req: express.Request, res: express.Response) {
+  const conversation = storage.createConversation()
+  res.status(201).json(conversation)
+}
+
+// conversations endpoints
+app.post("/conversations", createConversationHandler)
+
+app.get("/conversations", (req, res) => {
+  let conversationList = storage.getConversations()
+  res.json(conversationList)
+})
 
 // chat endpoint
 app.post("/chat", (req, res) => {
