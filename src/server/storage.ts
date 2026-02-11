@@ -21,3 +21,24 @@ export interface Storage {
     getConversations(): Conversation[]
     addMessagetoConversation(conversationId: string, message: Message): void 
 }
+
+
+class inMemoryStorage implements Storage {
+
+    conversations = new Map<string, Conversation>()
+    // no const or let inside a class property - while inside a method, can still use const/let for local variables
+    // overcomplicating it with new Map<string, ReturnType<typeof createConversation>>() because I already have a Conversation type defined. 
+
+    createConversation(){
+        let id = randomUUID()
+        const conversation: Conversation = {
+            id: id,
+            title: "",
+            createdAt: new Date(), // need new Date() to create value of actual timestamp. Not just Date, which is the class/constructor
+            messages: []
+        }
+        this.conversations.set(id, conversation)
+        return conversation
+    }
+
+}
