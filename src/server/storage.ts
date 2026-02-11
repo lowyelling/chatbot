@@ -19,7 +19,7 @@ export interface Storage {
     createConversation(): Conversation
     getConversation(conversationId: string): Conversation | null
     getConversations(): Conversation[]
-    addMessagetoConversation(conversationId: string, message: Message): void 
+    addMessagetoConversation(conversationId: string, message: Message): void // function doesn't return anything, it produces side effect
 }
 
 
@@ -45,6 +45,7 @@ class inMemoryStorage implements Storage {
         // error handling - eg ID not exist - throw error? return null? return Result object? 
         let conversation = this.conversations.get(conversationId)
         if (!conversation){
+            console.warn("conversation doesn't exist")
             return null
         } else return conversation
     }
@@ -55,8 +56,10 @@ class inMemoryStorage implements Storage {
         return conversationArray
     }   
 
-    // addMessagetoConversation(){
-
-    // }
-
+    addMessagetoConversation(conversationId: string, message: Message){
+        let conversation = this.conversations.get(conversationId)
+        if (!conversation){
+           console.warn("conversation doesn't exist")
+        } else conversation.messages.push(message) // no need for conversation?
+    }
 }
