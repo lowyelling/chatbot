@@ -3,6 +3,7 @@ import ViteExpress from "vite-express";
 import dotenv from "dotenv";
 import Anthropic from "@anthropic-ai/sdk"
 import { type Message } from "./storage"
+import { inMemoryStorage } from "./storage"
 
 dotenv.config()
 
@@ -17,18 +18,11 @@ app.use(express.json())
 
 
 // declarations outside route to survive between requests
-let messageHistory: Message[] = []
-
-//  messages: [{role: 'user', content: 'Hi Claude! I am in NYC!'}]
-
-// chatendpoint toy
-// app.post("/chat", (req, res) => {
-//   console.log('req body:',req.body)
-//   res.json({'status': 'ok'})
-// })
+// let messageHistory: Message[] = []
+new inMemoryStorage()
 
 
-// // chat endpoint
+// chat endpoint
 app.post("/chat", (req, res) => {
   // console.log('req body:',req.body)
   let userMessage = req.body.message
@@ -52,7 +46,6 @@ app.post("/chat", (req, res) => {
   })
 
 
-
 // reset endpoint
 app.get("/reset", (req, res) => {
   messageHistory = []
@@ -71,44 +64,6 @@ app.get("/hello", (req, res) => {
     }
     main().catch(console.error)
   })
-
-
-// Node Fetch
-// app.get("/hello", (req, res) => {
-//   async function main(){
-//       const body = {
-//           "model": "claude-haiku-4-5-20251001",
-//           "max_tokens": 1000,
-//           "messages": [
-//               {
-//                 "role": "user", 
-//                 "content": `What is the capital of America? Tell me some facts`
-//               }
-//           ]
-//       }
-
-//    const response = await fetch('https://api.anthropic.com/v1/messages', 
-//     { method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'x-api-key': process.env.ANTHROPIC_API_KEY!,
-//         'anthropic-version': '2023-06-01'
-//         },
-//       body: JSON.stringify(body)
-//     })
-//     const data = await response.json()
-//     console.log('data:', data)
-//     res.json(data)
-//   }
-
-//   main().catch(console.error)
-// })
-
-// basic hello
-
-// app.get("/hello", (_, res) => {
-//   res.send("Hello Vite + React + TypeScript!");
-// });
 
 
 ViteExpress.listen(app, PORT, () =>

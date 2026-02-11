@@ -23,7 +23,7 @@ export interface Storage {
 }
 
 
-class inMemoryStorage implements Storage {
+export class inMemoryStorage implements Storage {
 
     conversations = new Map<string, Conversation>()
     // no const or let inside a class property - while inside a method, can still use const/let for local variables
@@ -60,6 +60,6 @@ class inMemoryStorage implements Storage {
         let conversation = this.conversations.get(conversationId)
         if (!conversation){
            console.warn("conversation doesn't exist")
-        } else conversation.messages.push(message) // no need for conversation?
+        } else conversation.messages.push(message) // no need for conversation?. operator
     }
 }
