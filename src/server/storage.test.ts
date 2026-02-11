@@ -72,11 +72,27 @@ describe("getConversations", () => {
     })
 })
 
-
-
 // ---------------------------------------------------------------------------
 // addMessagetoConversation
 // ---------------------------------------------------------------------------
+
+describe("addMessagetoConversation", () => {
+    it("actually shows the last message", () => {
+        const storage = new inMemoryStorage()
+        const conversation = storage.createConversation()
+        const msg: Message = {role: 'user', content: 'hello'}
+        storage.addMessagetoConversation(conversation.id, msg) // remember added is undefined/void!! const added = is meaningless
+        const updated = storage.getConversation(conversation.id)
+        expect(updated?.messages).toContainEqual({role: 'user', content: 'hello'})
+    })
+
+    it("returns nothing when ID doesn't exist", () => {
+        const storage = new inMemoryStorage()
+        const msg: Message = {role: 'user', content: 'hey hey'}
+        storage.addMessagetoConversation("akd93", msg)
+        expect(storage.getConversations()).toEqual([])
+    })
+})
 
 
 // describe("createGame", () => {
