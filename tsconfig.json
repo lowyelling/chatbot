@@ -9,8 +9,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "NodeNext",
-    "moduleResolution": "Bundler", //change from NodeNext to drop file extensions in my imports
+    "module": "preserve",
+    "moduleResolution": "bundler", //change from NodeNext to drop file extensions in my imports
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true, 
