@@ -1,0 +1,52 @@
+import { describe, it, expect } from "vitest" 
+import {type Message, type Conversation, Storage, inMemoryStorage} from "./storage"
+import { beforeEach } from "node:test"
+
+const storage = new inMemoryStorage()
+
+// ---------------------------------------------------------------------------
+// createConversation
+// ---------------------------------------------------------------------------
+describe("createConversation", () => {
+    it("returns conversation with ID, title, createdAt, and empty messages array", () => {
+        const conversation = storage.createConversation()
+        expect(conversation.id).toBeTruthy()
+        expect(typeof conversation.id).toBe("string")
+        expect(conversation.title).toBe("")
+        expect(conversation.createdAt).toBeInstanceOf(Date)
+        expect(conversation.messages).toEqual([])
+    })
+
+    it("returns different IDs with different conversations", () => {
+        const conversation1 = storage.createConversation()
+        const conversation2 = storage.createConversation() 
+        expect(conversation1.id).not.toBe(conversation2.id)
+    })
+})
+
+// ---------------------------------------------------------------------------
+// getConversation
+// ---------------------------------------------------------------------------
+
+
+// ---------------------------------------------------------------------------
+// getConversations
+// ---------------------------------------------------------------------------
+
+
+// ---------------------------------------------------------------------------
+// addMessagetoConversation
+// ---------------------------------------------------------------------------
+
+
+// describe("createGame", () => {
+//   it("returns an empty board", () => {
+//     const game = createGame();
+//     expect(game.board).toEqual([null, null, null, null, null, null, null, null, null]);
+//   });
+
+//   it("starts with X as the current player", () => {
+//     const game = createGame();
+//     expect(game.currentPlayer).toBe("X");
+//   });
+// });
