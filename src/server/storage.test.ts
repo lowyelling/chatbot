@@ -27,7 +27,23 @@ describe("createConversation", () => {
 // ---------------------------------------------------------------------------
 // getConversation
 // ---------------------------------------------------------------------------
+describe("getConversation", () => {
 
+    it("returns a conversation that has been created", () => {
+        const storage = new inMemoryStorage()
+        const conversation = storage.createConversation()
+        const id = conversation.id 
+        const returned = storage.getConversation(id)
+        expect(returned).toEqual(conversation)
+
+    })
+
+    it("returns null when ID doesn't exist", () => {
+        const storage = new inMemoryStorage()
+        const returned = storage.getConversation("sksdf93")
+        expect(returned).toBe(null)
+    })
+})
 
 // ---------------------------------------------------------------------------
 // getConversations
