@@ -1,14 +1,13 @@
 import { describe, it, expect } from "vitest" 
 import {type Message, type Conversation, Storage, inMemoryStorage} from "./storage"
-import { beforeEach } from "node:test"
-
-const storage = new inMemoryStorage()
 
 // ---------------------------------------------------------------------------
 // createConversation
 // ---------------------------------------------------------------------------
 describe("createConversation", () => {
+
     it("returns conversation with ID, title, createdAt, and empty messages array", () => {
+        const storage = new inMemoryStorage()
         const conversation = storage.createConversation()
         expect(conversation.id).toBeTruthy()
         expect(typeof conversation.id).toBe("string")
@@ -18,6 +17,7 @@ describe("createConversation", () => {
     })
 
     it("returns different IDs with different conversations", () => {
+        const storage = new inMemoryStorage()
         const conversation1 = storage.createConversation()
         const conversation2 = storage.createConversation() 
         expect(conversation1.id).not.toBe(conversation2.id)
