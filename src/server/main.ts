@@ -3,6 +3,7 @@ import ViteExpress from "vite-express";
 import dotenv from "dotenv";
 import Anthropic from "@anthropic-ai/sdk"
 import { type Message } from "./storage"
+import { inMemoryStorage } from "./storage"
 
 dotenv.config()
 
@@ -17,98 +18,55 @@ app.use(express.json())
 
 
 // declarations outside route to survive between requests
-let messageHistory: Message[] = []
-
-//  messages: [{role: 'user', content: 'Hi Claude! I am in NYC!'}]
-
-// chatendpoint toy
-// app.post("/chat", (req, res) => {
-//   console.log('req body:',req.body)
-//   res.json({'status': 'ok'})
-// })
+// let conversation.messages: Message[] = []
+const storage = new inMemoryStorage()
 
 
-// // chat endpoint
+// chat endpoint
 app.post("/chat", (req, res) => {
   // console.log('req body:',req.body)
-  let userMessage = req.body.message
+  const { conversationId, message } = req.body ?? {} 
+  const conversation = storage.getConversation(conversationId)
+  if (!conversation){
+      res.status(404).json({"error": "Conversation not found"})
+      return
+  }
+  let userMessage = message
   const forMessage: Message = {role: 'user', content: userMessage}
-  messageHistory.push(forMessage)
-  console.log('messageHistory 1:', messageHistory)
+  storage.addMessagetoConversation(conversationId, forMessage)
+  console.log('conversation.messages 1:', conversation.messages)
    async function main(){
       const message = await client.messages.create({
         max_tokens: 1024,
-        messages: messageHistory,
+        messages: conversation!.messages,
         model: 'claude-haiku-4-5-20251001'
       })
       // console.log('message:',message)
+      if (message.content[0].type !== 'text'){
+         res.status(404).json({"error": "Type is not TextBlock"})
+        return
+      }
       const claudeMessage: Message = {role: 'assistant', content: message.content[0].text}
       console.log('claudeMessage:', claudeMessage)
-      messageHistory.push(claudeMessage)
-      console.log('messageHistory 2:', messageHistory)
+      storage.addMessagetoConversation(conversationId, claudeMessage)
+      console.log('conversation.messages 2:', conversation!.messages)
       res.json(message)
     }
     main().catch(console.error)
   })
 
 
-
-// reset endpoint
-app.get("/reset", (req, res) => {
-  messageHistory = []
-  res.send("cleared messageHistory")
-})
-
-// SDK
-app.get("/hello", (req, res) => {
-  async function main(){
-      const message = await client.messages.create({
-        max_tokens: 1024,
-        messages: [{role: 'user', content: 'Hi Claude! I am in NYC!'}],
-        model: 'claude-haiku-4-5-20251001'
-      })
-      res.json(message)
-    }
-    main().catch(console.error)
-  })
-
-
-// Node Fetch
-// app.get("/hello", (req, res) => {
-//   async function main(){
-//       const body = {
-//           "model": "claude-haiku-4-5-20251001",
-//           "max_tokens": 1000,
-//           "messages": [
-//               {
-//                 "role": "user", 
-//                 "content": `What is the capital of America? Tell me some facts`
-//               }
-//           ]
-//       }
-
-//    const response = await fetch('https://api.anthropic.com/v1/messages', 
-//     { method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'x-api-key': process.env.ANTHROPIC_API_KEY!,
-//         'anthropic-version': '2023-06-01'
-//         },
-//       body: JSON.stringify(body)
-//     })
-//     const data = await response.json()
-//     console.log('data:', data)
-//     res.json(data)
+// reset endpoint - not needed! just created a new conversation in the future, old ones stick around in sidebar
+// app.get("/reset", (req, res) => {
+//   const { conversationId, message } = req.body ?? {} 
+//   const conversation = storage.getConversation(conversationId)
+//   if (!conversation){
+//     res.status(404).json({"error": "Conversation not found"})
+//     return
 //   }
-
-//   main().catch(console.error)
+//   storage.addMessagetoConversation(conversationId, message)
+//   res.send("cleared conversation.messages")
 // })
-
-// basic hello
-
-// app.get("/hello", (_, res) => {
-//   res.send("Hello Vite + React + TypeScript!");
-// });
 
 
 ViteExpress.listen(app, PORT, () =>
