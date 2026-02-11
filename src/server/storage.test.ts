@@ -48,6 +48,30 @@ describe("getConversation", () => {
 // ---------------------------------------------------------------------------
 // getConversations
 // ---------------------------------------------------------------------------
+describe("getConversations", () => {
+
+    it("returns an empty array when there are no conversations", () => {
+        const storage = new inMemoryStorage()
+        const returned = storage.getConversations()
+        expect(returned).toEqual([])
+    })
+
+    it("returns all conversations", () => {
+        const storage = new inMemoryStorage()
+        const chat1 = storage.createConversation()
+        const chat2 = storage.createConversation()
+        const chat3 = storage.createConversation()
+        const returned = storage.getConversations()
+        expect(returned.length).toEqual(3)
+        expect(returned).toContainEqual(chat1)
+        expect(returned).toContainEqual(chat2)
+        expect(returned).toContainEqual(chat3)
+        // expect(returned[0]).toEqual(chat1) // Map happens work due to preservation of insertion order, but a database might return them in different order
+        // expect(returned[1]).toEqual(chat2)
+        // expect(returned[2]).toEqual(chat3)
+    })
+})
+
 
 
 // ---------------------------------------------------------------------------
