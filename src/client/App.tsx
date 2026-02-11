@@ -95,7 +95,10 @@ function App() {
   const messages = currentConversation?.messages ?? []
 
   return (
+
     <div className="max-w-2xl mx-auto">
+
+      <h1 className="text-2xl **:font-bold text-center mb-4">Lily's chatbot</h1>
 
       <Drawer direction="left">
         <DrawerTrigger asChild>
@@ -120,8 +123,6 @@ function App() {
           </div>
         </DrawerContent>
       </Drawer>
-
-      <h1>Lily's chatbot</h1>
 
       <ScrollArea className="h-150 w-full rounded-md border p-4">
         <div className="flex flex-col">
