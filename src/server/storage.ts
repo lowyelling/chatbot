@@ -49,15 +49,11 @@ class inMemoryStorage implements Storage {
         } else return conversation
     }
 
-
-//       // position parameter validation 
-//   if (!Number.isInteger(position)) {
-//     throw new Error("Position must be an integer")
-//   }
-
-    // getConversations(){
-
-    // }
+    getConversations(){
+        let iterator = this.conversations.values()
+        let conversationArray = Array.from(iterator)
+        return conversationArray
+    }   
 
     // addMessagetoConversation(){
 
