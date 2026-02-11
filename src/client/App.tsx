@@ -15,6 +15,17 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+
 function App() {
   const [text, setText] = useState("")
   const [conversationId, setConversationId] = useState<string | null >(null)
@@ -81,6 +92,23 @@ function App() {
 
   return (
     <div className="max-w-2xl mx-auto">
+
+      <Drawer>
+        <DrawerTrigger>Open</DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button>Submit</Button>
+            <DrawerClose>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+      
       <h1>Lily's chatbot</h1>
       <button onClick={()=>handleNewConversation()}>New Conversation</button>
 
