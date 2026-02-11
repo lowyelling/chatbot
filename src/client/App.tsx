@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {type Message, type Conversation} from "../server/storage.js"
 
 import { Button } from "@/components/ui/button"
@@ -30,6 +30,10 @@ function App() {
   const [text, setText] = useState("")
   const [conversationId, setConversationId] = useState<string | null >(null)
   const [conversationList, setConversationList] = useState<Conversation[]>([])
+
+  useEffect(() => {
+    handleNewConversation()
+  }, [])
 
   function handleNewConversation(){
     fetch('/conversations', { method: 'POST'})
@@ -93,24 +97,31 @@ function App() {
   return (
     <div className="max-w-2xl mx-auto">
 
-      <Drawer>
-        <DrawerTrigger>Open</DrawerTrigger>
+      <Drawer direction="left">
+        <DrawerTrigger asChild>
+          <Button variant="outline">Conversations</Button>
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+            <DrawerTitle>Conversations</DrawerTitle>
           </DrawerHeader>
-          <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
+          <div className="flex flex-col gap-2 p-4">
+            <Button onClick={() => handleNewConversation()}>New Conversation</Button>
+            {conversationList.map(conv => (
+              <Button
+                key={conv.id}
+                variant={conv.id === conversationId ? "default" : "outline"}
+                onClick={() => setConversationId(conv.id)}
+                className="justify-start text-left truncate"
+              >
+                {conv.title || conv.id.slice(0, 8) + "..."}
+              </Button>
+            ))}
+          </div>
         </DrawerContent>
       </Drawer>
-      
+
       <h1>Lily's chatbot</h1>
-      <button onClick={()=>handleNewConversation()}>New Conversation</button>
 
       <ScrollArea className="h-150 w-full rounded-md border p-4">
         <div className="flex flex-col">
