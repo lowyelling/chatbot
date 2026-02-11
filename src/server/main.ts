@@ -56,11 +56,17 @@ app.post("/chat", (req, res) => {
   })
 
 
-// reset endpoint
-app.get("/reset", (req, res) => {
-  storage.addMessagetoConversation()
-  res.send("cleared conversation.messages")
-})
+// reset endpoint - not needed! just created a new conversation in the future, old ones stick around in sidebar
+// app.get("/reset", (req, res) => {
+//   const { conversationId, message } = req.body ?? {} 
+//   const conversation = storage.getConversation(conversationId)
+//   if (!conversation){
+//     res.status(404).json({"error": "Conversation not found"})
+//     return
+//   }
+//   storage.addMessagetoConversation(conversationId, message)
+//   res.send("cleared conversation.messages")
+// })
 
 
 ViteExpress.listen(app, PORT, () =>
