@@ -41,4 +41,26 @@ class inMemoryStorage implements Storage {
         return conversation
     }
 
+    getConversation(conversationId: string){
+        // error handling - eg ID not exist - throw error? return null? return Result object? 
+        let conversation = this.conversations.get(conversationId)
+        if (!conversation){
+            return null
+        } else return conversation
+    }
+
+
+//       // position parameter validation 
+//   if (!Number.isInteger(position)) {
+//     throw new Error("Position must be an integer")
+//   }
+
+    // getConversations(){
+
+    // }
+
+    // addMessagetoConversation(){
+
+    // }
+
 }
