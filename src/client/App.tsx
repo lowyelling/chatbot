@@ -98,7 +98,7 @@ function App() {
 
     <div className="max-w-2xl mx-auto">
 
-      <h1 className="text-2xl **:font-bold text-center mb-4">Lily's chatbot</h1>
+      <h1 className="text-2xl font-bold text-center mb-4">Lily's chatbot</h1>
 
       <Drawer direction="left">
         <DrawerTrigger asChild>
