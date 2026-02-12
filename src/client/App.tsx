@@ -38,11 +38,11 @@ function App() {
   function handleNewConversation(){
     fetch('/conversations', { method: 'POST'})
       .then(response => (
-        console.log('response:', response),
+        // console.log('response:', response),
         response.json()
       ))
       .then(data => (
-        console.log('data:', data),
+        // console.log('data:', data),
         setConversationList([...conversationList, data]),
         setConversationId(data.id)
       ))
@@ -70,13 +70,13 @@ function App() {
         response.json())
       )
       .then(data => {
-        console.log('data handleSend',data);
+        // console.log('data handleSend',data);
         const role = data.role;
-        console.log('role handleSend', role);
+        // console.log('role handleSend', role);
         const content = data.content[0].text;
-        console.log('content handleSend',content)
+        // console.log('content handleSend',content)
         const newMessage = {role, content};
-        console.log('newMessage handleSend', newMessage);
+        // console.log('newMessage handleSend', newMessage);
         setConversationList(prev => 
           prev.map( conv => {
             if (conv.id === conversationId) {

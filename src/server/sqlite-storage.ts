@@ -19,8 +19,8 @@ import { type Message, type Conversation, Storage } from "./storage"
 export class SQliteStorage implements Storage {
     db: InstanceType <typeof Database>
 
-      constructor() {
-          this.db = new Database(':memory:') // instead of 'foobar.db' so that tests create a throwaway in-memory db that vanishes with each instance
+      constructor(filename: string) {
+          this.db = new Database(filename) // ':memory:' instead of 'foobar.db' so that tests create a throwaway in-memory db that vanishes with each instance
           this.db.pragma('journal_mode = WAL')
           this.db.exec(`CREATE TABLE IF NOT EXISTS conversations(
             id TEXT PRIMARY KEY, 

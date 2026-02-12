@@ -4,7 +4,7 @@ import { SQliteStorage } from "./sqlite-storage"
 
 function makeStorage(){
     // return new inMemoryStorage() 
-    return new SQliteStorage()
+    return new SQliteStorage(':memory:') // pass in the throwaway db as argument
 }
 
 // ---------------------------------------------------------------------------
