@@ -37,8 +37,22 @@ export class SQliteStorage implements Storage {
             )`)
       }
 
-    createConversation(){
+    createConversation() {
+        let id = randomUUID()
+        let createdAt = new Date().toISOString() // SQLite lacks real datetime type - store ISO strings and they sort correctly due to ISO being alphabetical (thus chronological)
 
+        this.db.prepare( // compiles SQL statement for execution 
+            `INSERT INTO conversations (id, title, createdAt) VALUES (?, ?, ?)` // ? are placeholders, filled in by the arguments in .run(). Parameterized query to prevent SQL injection
+        ).run(id, "", createdAt) // executes the SQL statement. Used for INSERT/UPDATE/DELETE (statements that change the data, not returning rows)
+
+        // note no messages column, since they live in their own table. Empty conversation means "no rows in messages with this conversationId"
+ 
+        return {
+            id,
+            title: "",
+            createdAt: new Date(createdAt),
+            messages: []
+        }
     }
 
     getConversation(conversationId: string){
