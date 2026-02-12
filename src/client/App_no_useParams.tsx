@@ -1,7 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
-import {type Conversation} from "../server/storage.js"
+import { Routes, Route, useParams } from "react-router";
+import {type Message, type Conversation} from "../server/storage.js"
 
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -27,16 +27,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 
-
-
 function App() {
   const [text, setText] = useState("")
-  // const [conversationId, setConversationId] = useState<string | null >(null)
+  const [conversationId, setConversationId] = useState<string | null >(null)
   const [conversationList, setConversationList] = useState<Conversation[]>([])
-
-  const navigate = useNavigate()
-  const chatId = useParams().chatId 
-  // console.log('useParams chatId', chatId)
 
   useEffect(() => {
     fetchConversationList()
@@ -47,7 +41,7 @@ function App() {
     fetch('/api/conversations')
       .then(response => response.json())
       .then(data => (
-        // console.log('data',data),
+        console.log('data',data),
         setConversationList(data)
       ))
       .catch(error => console.error('Error:', error))
@@ -62,8 +56,8 @@ function App() {
       ))
       .then(data => (
         // console.log('data:', data),
-        setConversationList([...conversationList, data])
-        // setConversationId(`/chat/${chatId}`)
+        setConversationList([...conversationList, data]),
+        setConversationId(data.id)
       ))
       .catch(error => console.error('Error:', error))
   }
@@ -72,7 +66,7 @@ function App() {
     // setConversation(prev => [...prev, {role: 'user', content: text}]) - old, from when we only had a single chat
     setConversationList(prev =>                                                                                                                                                                        
       prev.map(conv => {                                                                                                                                                                             
-        if (conv.id === chatId) {                                                                                                                                                              
+        if (conv.id === conversationId) {                                                                                                                                                              
           return { ...conv, messages: [...conv.messages, { role: 'user', content: text }] }                                                                                                            
         }
         return conv
@@ -82,7 +76,7 @@ function App() {
     fetch( '/api/chat',
       { method: 'POST',
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({conversationId: chatId, message: text})
+        body: JSON.stringify({conversationId: conversationId, message: text})
       })
       .then(response => (
         // console.log('response',response),
@@ -98,7 +92,7 @@ function App() {
         // console.log('newMessage handleSend', newMessage);
         setConversationList(prev => 
           prev.map( conv => {
-            if (conv.id === chatId) {
+            if (conv.id === conversationId) {
               return {...conv, messages: [...conv.messages, newMessage]}
             } 
             return conv
@@ -110,7 +104,7 @@ function App() {
     setText("")
   }
 
-  const currentConversation = conversationList.find(conv => conv.id === chatId)
+  const currentConversation = conversationList.find(conv => conv.id === conversationId)
   const messages = currentConversation?.messages ?? []
 
   return (
@@ -133,8 +127,8 @@ function App() {
             {conversationList.map(conv => (
               <Button
                 key={conv.id}
-                variant={conv.id === chatId ? "default" : "outline"}
-                onClick={() => navigate(`/chat/${conv.id}`)}
+                variant={conv.id === conversationId ? "default" : "outline"}
+                onClick={() => setConversationId(conv.id)}
                 className="justify-start text-left truncate"
               >
                 {conv.title || conv.id.slice(0, 8) + "..."}

@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <Link to="/new">new</Link> */}
         <Routes>
             <Route path="/" element = { <App />} />
-            <Route path="/chat/:conversationId" element = { <App />} />
+            <Route path="/chat/:chatId" element = { <App />} />
             <Route path="/new" element = { <App />} />
         </Routes>
     </BrowserRouter>
