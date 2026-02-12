@@ -55,53 +55,58 @@ export class SQliteStorage implements Storage {
         }
     }
 
-    getConversation(conversationId: string){
+    getConversation(conversationId: string) {
+        // Step 1: get the conversation row
+        const row = this.db.prepare(
+            `SELECT id, title, createdAt FROM conversations WHERE id = ?`
+        ).get(conversationId) as { id: string, title: string, createdAt: string } | undefined 
+        // .get() returns one row (or undefined if no match). Compare to .run() which returns no data.
 
-    }
+        if (!row) return null
 
-    getConversations(){
+        // Step 2: get all messages for this conversation, ordered by time
+        const messageRows = this.db.prepare(
+            `SELECT role, content FROM messages WHERE conversationId = ? ORDER BY createdAt`
+        ).all(conversationId) as Message[]
+        // .all() returns an array of rows. Third method for query execution: .run() for writes, .get() for one row, .all() for many rows.
 
-    }
+        // my instinct was to start with Conversations and left join Messages on Conversations.id = Messages.Conversationsid, but Claude suggested to break it up for easier reading
+        // first get conversation, then get its messages - perf is negligible
 
-    addMessagetoConversation(conversationId: string, message: Message){
-
-    }
-  }
-    
-
-export class inMemoryStorage implements Storage {
-
-    createConversation(){
-        let id = randomUUID()
-        const conversation: Conversation = {
-            id: id,
-            title: "",
-            createdAt: new Date(), // need new Date() to create value of actual timestamp. Not just Date, which is the class/constructor
-            messages: []
+        return {
+            id: row.id,
+            title: row.title,
+            createdAt: new Date(row.createdAt),
+            messages: messageRows
         }
-        this.conversations.set(id, conversation)
-        return conversation
     }
 
-    getConversation(conversationId: string){
-        // error handling - eg ID not exist - throw error? return null? return Result object? 
-        let conversation = this.conversations.get(conversationId)
-        if (!conversation){
-            console.warn("conversation doesn't exist")
-            return null
-        } else return conversation
+    getConversations() {
+        // Get all conversations
+        const rows = this.db.prepare(
+            `SELECT id, title, createdAt FROM conversations ORDER BY createdAt`
+        ).all() as { id: string, title: string, createdAt: string }[]
+
+        // For each conversation, fetch its messages
+        // This is N+1 apparently - with a prod app, I'd want to optimize this
+        return rows.map(row => {
+            const messages = this.db.prepare(
+                `SELECT role, content FROM messages WHERE conversationId = ? ORDER BY createdAt`
+            ).all(row.id) as Message[]
+
+            return {
+                id: row.id,
+                title: row.title,
+                createdAt: new Date(row.createdAt),
+                messages
+            }
+        })
     }
 
-    getConversations(){
-        let iterator = this.conversations.values()
-        let conversationArray = Array.from(iterator)
-        return conversationArray
-    }   
-
-    addMessagetoConversation(conversationId: string, message: Message){
-        let conversation = this.conversations.get(conversationId)
-        if (!conversation){
-           console.warn("conversation doesn't exist")
-        } else conversation.messages.push(message) // no need for conversation?. optional chaining
+    addMessagetoConversation(conversationId: string, message: Message) {
+        // Same pattern as createConversation — INSERT + .run()
+        this.db.prepare(
+            `INSERT INTO messages (id, conversationId, role, content, createdAt) VALUES (?, ?, ?, ?, ?)`
+        ).run(randomUUID(), conversationId, message.role, message.content, new Date().toISOString())
     }
 }
