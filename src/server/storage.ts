@@ -59,7 +59,7 @@ export class inMemoryStorage implements Storage {
     addMessagetoConversation(conversationId: string, message: Message){
         let conversation = this.conversations.get(conversationId)
         if (!conversation){
-           console.warn("conversation doesn't exist")
+           throw new Error("conversation doesn't exist")
         } else conversation.messages.push(message) // no need for conversation?. optional chaining
     }
 }

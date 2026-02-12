@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import Anthropic from "@anthropic-ai/sdk"
 import { type Message } from "./storage"
 import { inMemoryStorage } from "./storage"
+import { SQliteStorage } from "./sqlite-storage"
 
 dotenv.config()
 
@@ -18,7 +19,9 @@ app.use(express.json())
 
 // declarations outside route to survive between requests
 // let conversation.messages: Message[] = []
-const storage = new inMemoryStorage()
+
+// const storage = new inMemoryStorage()
+const storage = new SQliteStorage('foobar.db') // pass in a real db name
 
 function createConversationHandler(req: express.Request, res: express.Response) {
   const conversation = storage.createConversation()
@@ -45,11 +48,14 @@ app.post("/chat", (req, res) => {
   let userMessage = message
   const forMessage: Message = {role: 'user', content: userMessage}
   storage.addMessagetoConversation(conversationId, forMessage)
-  console.log('conversation.messages 1:', conversation.messages)
+  const updated = storage.getConversation(conversationId)  // re-fetch after the INSERT
+  // then use updated.messages instead of conversation.messages when calling Claude
+  // doesn't affect in-memory - an extra redundant read for in-memory, but without it, conversation object is already stale       
+  // console.log('conversation.messages 1:', conversation.messages)
    async function main(){
       const message = await client.messages.create({
         max_tokens: 1024,
-        messages: conversation!.messages,
+        messages: updated!.messages,
         model: 'claude-haiku-4-5-20251001'
       })
       // console.log('message:',message)

@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest" 
-import {type Message, type Conversation, Storage, inMemoryStorage} from "./storage"
+import { type Message, type Conversation, Storage, inMemoryStorage } from "./storage"
+import { SQliteStorage } from "./sqlite-storage"
+
+function makeStorage(){
+    // return new inMemoryStorage() 
+    return new SQliteStorage(':memory:') // pass in the throwaway db as argument
+}
 
 // ---------------------------------------------------------------------------
 // createConversation
@@ -7,7 +13,7 @@ import {type Message, type Conversation, Storage, inMemoryStorage} from "./stora
 describe("createConversation", () => {
 
     it("returns conversation with ID, title, createdAt, and empty messages array", () => {
-        const storage = new inMemoryStorage()
+        const storage = makeStorage()
         const conversation = storage.createConversation()
         expect(conversation.id).toBeTruthy()
         expect(typeof conversation.id).toBe("string")
@@ -17,7 +23,7 @@ describe("createConversation", () => {
     })
 
     it("returns different IDs with different conversations", () => {
-        const storage = new inMemoryStorage()
+        const storage = makeStorage()
         const conversation1 = storage.createConversation()
         const conversation2 = storage.createConversation() 
         expect(conversation1.id).not.toBe(conversation2.id)
@@ -30,7 +36,7 @@ describe("createConversation", () => {
 describe("getConversation", () => {
 
     it("returns a conversation that has been created", () => {
-        const storage = new inMemoryStorage()
+        const storage = makeStorage()
         const conversation = storage.createConversation()
         const id = conversation.id 
         const returned = storage.getConversation(id)
@@ -39,7 +45,7 @@ describe("getConversation", () => {
     })
 
     it("returns null when ID doesn't exist", () => {
-        const storage = new inMemoryStorage()
+        const storage = makeStorage()
         const returned = storage.getConversation("sksdf93")
         expect(returned).toBe(null)
     })
@@ -51,13 +57,13 @@ describe("getConversation", () => {
 describe("getConversations", () => {
 
     it("returns an empty array when there are no conversations", () => {
-        const storage = new inMemoryStorage()
+        const storage = makeStorage()
         const returned = storage.getConversations()
         expect(returned).toEqual([])
     })
 
     it("returns all conversations", () => {
-        const storage = new inMemoryStorage()
+        const storage = makeStorage()
         const chat1 = storage.createConversation()
         const chat2 = storage.createConversation()
         const chat3 = storage.createConversation()
@@ -78,7 +84,7 @@ describe("getConversations", () => {
 
 describe("addMessagetoConversation", () => {
     it("actually shows the last message", () => {
-        const storage = new inMemoryStorage()
+        const storage = makeStorage()
         const conversation = storage.createConversation()
         const msg: Message = {role: 'user', content: 'hello'}
         storage.addMessagetoConversation(conversation.id, msg) // remember added is undefined/void!! const added = is meaningless
@@ -86,11 +92,10 @@ describe("addMessagetoConversation", () => {
         expect(updated?.messages).toContainEqual({role: 'user', content: 'hello'})
     })
 
-    it("returns nothing when ID doesn't exist", () => {
-        const storage = new inMemoryStorage()
+    it("throws when ID doesn't exist", () => {
+        const storage = makeStorage()
         const msg: Message = {role: 'user', content: 'hey hey'}
-        storage.addMessagetoConversation("akd93", msg)
-        expect(storage.getConversations()).toEqual([])
+        expect(() => storage.addMessagetoConversation("akd93", msg)).toThrow()
     })
 })
 
