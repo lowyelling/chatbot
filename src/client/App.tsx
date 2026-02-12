@@ -62,7 +62,8 @@ function App() {
       ))
       .then(data => (
         // console.log('data:', data),
-        setConversationList([...conversationList, data])
+        setConversationList([...conversationList, data]),
+        navigate(`/chat/${data.id}`)
         // setConversationId(`/chat/${chatId}`)
       ))
       .catch(error => console.error('Error:', error))
