@@ -92,11 +92,10 @@ describe("addMessagetoConversation", () => {
         expect(updated?.messages).toContainEqual({role: 'user', content: 'hello'})
     })
 
-    it("returns nothing when ID doesn't exist", () => {
+    it("throws when ID doesn't exist", () => {
         const storage = makeStorage()
         const msg: Message = {role: 'user', content: 'hey hey'}
-        storage.addMessagetoConversation("akd93", msg)
-        expect(storage.getConversations()).toEqual([])
+        expect(() => storage.addMessagetoConversation("akd93", msg)).toThrow()
     })
 })
 
