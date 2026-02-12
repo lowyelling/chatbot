@@ -32,8 +32,20 @@ function App() {
   const [conversationList, setConversationList] = useState<Conversation[]>([])
 
   useEffect(() => {
-    handleNewConversation()
+    fetchConversationList()
   }, [])
+
+
+  function fetchConversationList(){
+    fetch('/api/conversations')
+      .then(response => response.json())
+      .then(data => (
+        console.log('data',data),
+        setConversationList(data)
+      ))
+      .catch(error => console.error('Error:', error))
+  }
+
 
   function handleNewConversation(){
     fetch('/api/conversations', { method: 'POST'})
