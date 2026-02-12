@@ -107,6 +107,7 @@ function App() {
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Conversations</DrawerTitle>
+            <DrawerDescription>Select or start a conversation</DrawerDescription>
           </DrawerHeader>
           <div className="flex flex-col gap-2 p-4">
             <Button onClick={() => handleNewConversation()}>New Conversation</Button>
