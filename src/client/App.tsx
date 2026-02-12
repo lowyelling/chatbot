@@ -36,7 +36,7 @@ function App() {
   }, [])
 
   function handleNewConversation(){
-    fetch('/conversations', { method: 'POST'})
+    fetch('/api/conversations', { method: 'POST'})
       .then(response => (
         // console.log('response:', response),
         response.json()
@@ -60,7 +60,7 @@ function App() {
       })
     )
 
-    fetch( '/chat',
+    fetch( '/api/chat',
       { method: 'POST',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({conversationId: conversationId, message: text})

@@ -29,15 +29,15 @@ function createConversationHandler(req: express.Request, res: express.Response) 
 }
 
 // conversations endpoints
-app.post("/conversations", createConversationHandler)
+app.post("/api/conversations", createConversationHandler)
 
-app.get("/conversations", (req, res) => {
+app.get("/api/conversations", (req, res) => {
   let conversationList = storage.getConversations()
   res.json(conversationList)
 })
 
 // chat endpoint
-app.post("/chat", (req, res) => {
+app.post("/api/chat", (req, res) => {
   // console.log('req body:',req.body)
   const { conversationId, message } = req.body ?? {} 
   const conversation = storage.getConversation(conversationId)
