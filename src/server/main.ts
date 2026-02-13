@@ -2,6 +2,8 @@ import express from "express";
 import ViteExpress from "vite-express";
 import dotenv from "dotenv";
 import Anthropic from "@anthropic-ai/sdk"
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "../lib/auth";
 import { type Message } from "./storage"
 import { inMemoryStorage } from "./storage"
 import { SQliteStorage } from "./sqlite-storage"
@@ -14,6 +16,9 @@ const client = new Anthropic({
     apiKey: process.env['ANTHROPIC_API_KEY']
   }
 )
+
+// This MUST come before express.json() or auth requests hang
+app.all("/api/auth/{*any}", toNodeHandler(auth));  // Express v5 wildcard syntax
 
 app.use(express.json())
 
