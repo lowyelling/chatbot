@@ -26,10 +26,10 @@ function Login(){
     const [error, setError] = useState<string | null>(null)
 
     // check if already logged in
-    // const session = authClient.useSession() 
-    // // console.log('session:', session)
-    // // const data = session.data
-    // // console.log('data.session:', data)
+    const session = authClient.useSession() 
+    console.log('session:', session)
+    const data = session.data
+    console.log('data.session:', data)
 
     // useEffect(() => {
     //     if (session) navigate("/new")
