@@ -43,6 +43,16 @@ function App() {
     fetchConversationList()
   }, [])
 
+  async function handleLogout(){
+    await authClient.signOut(
+      {fetchOptions: {
+          onSuccess: () => {
+            navigate("/") // redirect to login page
+          }
+        }
+      }  
+    )
+  }
 
   function fetchConversationList(){
     fetch('/api/conversations')
@@ -118,6 +128,11 @@ function App() {
     <div className="max-w-2xl mx-auto">
 
       <h1 className="text-2xl font-bold text-center mb-4">Lily's chatbot</h1>
+
+      <Button onClick={()=>handleLogout()}>Logout</Button>
+
+      <br></br>
+      <br></br>
 
       <Drawer direction="left">
         <DrawerTrigger asChild>
