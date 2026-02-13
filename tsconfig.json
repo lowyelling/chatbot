@@ -13,7 +13,8 @@
     "moduleResolution": "bundler", //change from NodeNext to drop file extensions in my imports
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true, 
+    "jsx": "react-jsx",
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]}
