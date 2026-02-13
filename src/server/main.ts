@@ -22,6 +22,18 @@ app.all("/api/auth/{*any}", toNodeHandler(auth));  // Express v5 wildcard syntax
 
 app.use(express.json())
 
+
+// auth middleware 
+
+async function requireAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const session = await auth.api.getSession({ headers: new Headers(req.headers as Record<string, string>) });
+  if (!session) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+  res.locals.user = session.user;  // now every handler can read req.user.id
+  next();
+}
+
 // declarations outside route to survive between requests
 // let conversation.messages: Message[] = []
 
