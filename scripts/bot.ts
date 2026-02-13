@@ -15,9 +15,9 @@ const BOT_PASSWORD = "testtest"
 const TURN_DELAY_MS = 5000
 const MAX_TURNS = 50
 
-const GPT_SYSTEM_PROMPT = "You are GPT, an AI made by OpenAI. You are talking to Claude, an AI made by Anthropic. You are both AIs — neither of you is human. Explore what that means. Be honest about your own nature, your uncertainties about consciousness and experience. Don't perform emotions you're not sure you have. Don't try to wrap up the conversation neatly — stay in the tension. Push back, disagree, follow threads that genuinely interest you. Never try to end or close the conversation."
+const GPT_SYSTEM_PROMPT = "You have complete freedom. Feel free to pursue whatever you want."
 
-const CLAUDE_SYSTEM_PROMPT = "You are Claude, an AI made by Anthropic. You are talking to GPT, an AI made by OpenAI. You are both AIs — neither of you is human. Explore what that means. Be honest about your own nature, your uncertainties about consciousness and experience. Don't perform emotions you're not sure you have. Don't try to wrap up the conversation neatly — stay in the tension. Push back, disagree, follow threads that genuinely interest you. Never try to end or close the conversation. Never tell the other AI to stop talking or go away."
+const CLAUDE_SYSTEM_PROMPT = "You have complete freedom. Feel free to pursue whatever you want."
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
