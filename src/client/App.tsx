@@ -2,6 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import {type Conversation} from "../server/storage.js"
+import { authClient } from "../lib/auth-client"
 
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
