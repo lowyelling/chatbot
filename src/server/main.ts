@@ -56,7 +56,7 @@ app.get("/api/conversations", requireAuth, (req, res) => {
 // chat endpoint
 app.post("/api/chat", requireAuth, (req, res) => {
   // console.log('req body:',req.body)
-  const { conversationId, message } = req.body ?? {} 
+  const { conversationId, message, system } = req.body ?? {}
   const conversation = storage.getConversation(conversationId, res.locals.user.id)
   if (!conversation){
       res.status(404).json({"error": "Conversation not found"})
@@ -73,7 +73,8 @@ app.post("/api/chat", requireAuth, (req, res) => {
       const message = await client.messages.create({
         max_tokens: 1024,
         messages: updated!.messages,
-        model: 'claude-haiku-4-5-20251001'
+        model: 'claude-haiku-4-5-20251001',
+        ...(system && { system }),
       })
       // console.log('message:',message)
       if (message.content[0].type !== 'text'){
