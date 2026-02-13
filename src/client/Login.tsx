@@ -26,14 +26,14 @@ function Login(){
     const [error, setError] = useState<string | null>(null)
 
     // check if already logged in
-    // const session = authClient.useSession() 
-    // // console.log('session:', session)
-    // // const data = session.data
-    // // console.log('data.session:', data)
+    const session = authClient.useSession() 
+    // console.log('session:', session)
+    const data = session.data
+    // console.log('data.session:', data)
 
-    // useEffect(() => {
-    //     if (session) navigate("/new")
-    // }, [session])
+    useEffect(() => {
+        if (data) navigate("/new")
+    }, [data])
 
     async function signIn(){
         await authClient.signIn.email({
@@ -71,6 +71,7 @@ function Login(){
 
     return (
         <>
+        <h1 className="text-3xl font-bold text-center mb-4">Lily's chatbot</h1>
 
         {isSignUp ? 
 
