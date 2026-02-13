@@ -31,9 +31,9 @@ function Login(){
     const data = session.data
     // console.log('data.session:', data)
 
-    // useEffect(() => {
-    //     if (session) navigate("/new")
-    // }, [session])
+    useEffect(() => {
+        if (data) navigate("/new")
+    }, [data])
 
     async function signIn(){
         await authClient.signIn.email({
