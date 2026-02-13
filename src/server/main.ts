@@ -30,7 +30,7 @@ async function requireAuth(req: express.Request, res: express.Response, next: ex
   if (!session) {
     return res.status(401).json({ error: "Not authenticated" });
   }
-  res.locals.user = session.user;  // now every handler can read req.user.id
+  res.locals.user = session.user;  // now every handler can read res.locals.user.id
   next();
 }
 
@@ -41,31 +41,31 @@ async function requireAuth(req: express.Request, res: express.Response, next: ex
 const storage = new SQliteStorage('foobar.db') // pass in a real db name
 
 function createConversationHandler(req: express.Request, res: express.Response) {
-  const conversation = storage.createConversation()
+  const conversation = storage.createConversation(res.locals.user.id)
   res.status(201).json(conversation)
 }
 
 // conversations endpoints
-app.post("/api/conversations", createConversationHandler)
+app.post("/api/conversations", requireAuth, createConversationHandler)
 
-app.get("/api/conversations", (req, res) => {
-  let conversationList = storage.getConversations()
+app.get("/api/conversations", requireAuth, (req, res) => {
+  let conversationList = storage.getConversations(res.locals.user.id)
   res.json(conversationList)
 })
 
 // chat endpoint
-app.post("/api/chat", (req, res) => {
+app.post("/api/chat", requireAuth, (req, res) => {
   // console.log('req body:',req.body)
   const { conversationId, message } = req.body ?? {} 
-  const conversation = storage.getConversation(conversationId)
+  const conversation = storage.getConversation(conversationId, res.locals.user.id)
   if (!conversation){
       res.status(404).json({"error": "Conversation not found"})
       return
   }
   let userMessage = message
   const forMessage: Message = {role: 'user', content: userMessage}
-  storage.addMessagetoConversation(conversationId, forMessage)
-  const updated = storage.getConversation(conversationId)  // re-fetch after the INSERT
+  storage.addMessagetoConversation(conversationId, res.locals.user.id, forMessage)
+  const updated = storage.getConversation(conversationId, res.locals.user.id)  // re-fetch after the INSERT
   // then use updated.messages instead of conversation.messages when calling Claude
   // doesn't affect in-memory - an extra redundant read for in-memory, but without it, conversation object is already stale       
   // console.log('conversation.messages 1:', conversation.messages)
@@ -82,7 +82,7 @@ app.post("/api/chat", (req, res) => {
       }
       const claudeMessage: Message = {role: 'assistant', content: message.content[0].text}
       console.log('claudeMessage:', claudeMessage)
-      storage.addMessagetoConversation(conversationId, claudeMessage)
+      storage.addMessagetoConversation(conversationId, res.locals.user.id, claudeMessage)
       console.log('conversation.messages 2:', conversation!.messages)
       res.json(message)
     }
