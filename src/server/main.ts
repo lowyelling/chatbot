@@ -1,6 +1,6 @@
 import express from "express";
 import ViteExpress from "vite-express";
-import dotenv from "dotenv";
+import "dotenv/config" // import dotenv from "dotenv" - line 11 doesn't work! by time dotenv loads the file, auth is already reading undefined
 import Anthropic from "@anthropic-ai/sdk"
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "../lib/auth";
@@ -8,7 +8,7 @@ import { type Message } from "./storage"
 import { inMemoryStorage } from "./storage"
 import { SQliteStorage } from "./sqlite-storage"
 
-dotenv.config()
+// dotenv.config()
 
 const PORT = 3000
 const app = express();
