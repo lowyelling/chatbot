@@ -56,7 +56,10 @@ function App() {
 
   function fetchConversationList(){
     fetch('/api/conversations')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) return navigate("/")
+        return response.json()
+      })
       .then(data => (
         // console.log('data',data),
         setConversationList(data)
@@ -67,10 +70,11 @@ function App() {
 
   function handleNewConversation(){
     fetch('/api/conversations', { method: 'POST'})
-      .then(response => (
+      .then(response => {
         // console.log('response:', response),
-        response.json()
-      ))
+        if (!response.ok) return navigate("/")
+        return response.json()
+      })
       .then(data => (
         // console.log('data:', data),
         setConversationList([...conversationList, data]),
@@ -85,6 +89,7 @@ function App() {
                                                                                                                                                                                          
     if (!targetId) {                                                                                                                                                                     
       const res = await fetch('/api/conversations', { method: 'POST' })
+      if (!res.ok) return navigate("/")
       const newConv = await res.json()
       setConversationList(prev => [...prev, newConv])
       targetId = newConv.id
@@ -105,6 +110,7 @@ function App() {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({conversationId: targetId, message: text})
     })
+    if (!response.ok) return navigate("/")
     const data = await response.json()
     const role = data.role
     const content = data.content[0].text
