@@ -53,6 +53,16 @@ app.get("/api/conversations", requireAuth, (req, res) => {
   res.json(conversationList)
 })
 
+app.patch("/api/conversations/:id", requireAuth, (req, res) => {
+  const { title } = req.body ?? {}
+  try {
+    storage.updateConversationTitle(req.params.id, res.locals.user.id, title)
+    res.json({ ok: true })
+  } catch (err) {
+    res.status(404).json({ error: "Conversation not found" })
+  }
+})
+
 // chat endpoint
 app.post("/api/chat", requireAuth, (req, res) => {
   // console.log('req body:',req.body)
