@@ -7,6 +7,7 @@ import {type Conversation} from "../server/storage.js"
 import { authClient } from "../lib/auth-client"
 
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
@@ -36,6 +37,8 @@ function App() {
   const [text, setText] = useState("")
   // const [conversationId, setConversationId] = useState<string | null >(null)
   const [conversationList, setConversationList] = useState<Conversation[]>([])
+  const [editingConvId, setEditingConvId] = useState<string | null>(null)
+  const [editingTitle, setEditingTitle] = useState("")
 
   const navigate = useNavigate()
   const chatId = useParams().chatId
@@ -129,6 +132,27 @@ function App() {
     setText("")
   }
 
+  function convLabel(conv: Conversation) {
+    if (conv.title) return conv.title
+    const date = new Date(conv.createdAt)
+    const dateStr = `${date.getMonth() + 1}/${date.getDate()}/${String(date.getFullYear()).slice(2)}`
+    const preview = conv.messages[0]?.content.slice(0, 30) || "New conversation"
+    return `${dateStr} - ${preview}${conv.messages[0]?.content.length > 30 ? "..." : ""}`
+  }
+
+  async function handleRenameConversation(convId: string) {
+    const res = await fetch(`/api/conversations/${convId}`, {
+      method: 'PATCH',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: editingTitle })
+    })
+    if (!res.ok) return
+    setConversationList(prev =>
+      prev.map(conv => conv.id === convId ? { ...conv, title: editingTitle } : conv)
+    )
+    setEditingConvId(null)
+  }
+
   const currentConversation = conversationList.find(conv => conv.id === chatId)
   const messages = currentConversation?.messages ?? []
 
@@ -150,19 +174,41 @@ function App() {
               <div className="flex flex-col gap-2 p-4">
                 <Button onClick={() => handleNewConversation()}>New Conversation</Button>
                 {conversationList.map(conv => (
-                  <Button
-                    key={conv.id}
-                    variant={conv.id === chatId ? "default" : "outline"}
-                    onClick={() => navigate(`/chat/${conv.id}`)}
-                    className="justify-start text-left truncate"
-                  >
-                    {(() => {
-                      const date = new Date(conv.createdAt)
-                      const dateStr = `${date.getMonth() + 1}/${date.getDate()}/${String(date.getFullYear()).slice(2)}`
-                      const preview = conv.messages[0]?.content.slice(0, 30) || "New conversation"
-                      return `${dateStr} - ${preview}${conv.messages[0]?.content.length > 30 ? "..." : ""}`
-                    })()}
-                  </Button>
+                  <div key={conv.id} className="flex items-center gap-1">
+                    {editingConvId === conv.id ? (
+                      <Input
+                        autoFocus
+                        value={editingTitle}
+                        onChange={(e) => setEditingTitle(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleRenameConversation(conv.id)
+                          if (e.key === "Escape") setEditingConvId(null)
+                        }}
+                        onBlur={() => handleRenameConversation(conv.id)}
+                        className="flex-1 h-9"
+                      />
+                    ) : (
+                      <>
+                        <Button
+                          variant={conv.id === chatId ? "default" : "outline"}
+                          onClick={() => navigate(`/chat/${conv.id}`)}
+                          className="flex-1 justify-start text-left truncate"
+                        >
+                          {convLabel(conv)}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          onClick={() => {
+                            setEditingConvId(conv.id)
+                            setEditingTitle(conv.title || "")
+                          }}
+                        >
+                          ✏️
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 ))}
               </div>
             </DrawerContent>
