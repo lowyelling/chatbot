@@ -72,7 +72,7 @@ app.post("/api/chat", requireAuth, (req, res) => {
    async function main(){
       const message = await client.messages.create({
         max_tokens: requestMaxTokens || 1024,
-        messages: updated!.messages,
+        messages: updated!.messages.map(({ role, content }) => ({ role, content })),
         model: requestModel || 'claude-haiku-4-5-20251001',
         ...(system && { system }),
       })
