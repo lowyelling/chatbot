@@ -10,7 +10,7 @@ import { SQliteStorage } from "./sqlite-storage"
 
 // dotenv.config()
 
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 const app = express();
 const client = new Anthropic({
     apiKey: process.env['ANTHROPIC_API_KEY']
