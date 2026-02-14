@@ -107,4 +107,12 @@ export class SQliteStorage implements Storage {
             `INSERT INTO messages (id, conversationId, role, content, createdAt) VALUES (?, ?, ?, ?, ?)`
         ).run(randomUUID(), conversationId, message.role, message.content, new Date().toISOString())
     }
+
+    updateConversationTitle(conversationId: string, userId: string, title: string) {
+        const result = this.db.prepare(
+            `UPDATE conversations SET title = ? WHERE id = ? AND userId = ?`
+        ).run(title, conversationId, userId)
+
+        if (result.changes === 0) throw new Error("conversation doesn't exist")
+    }
 }
