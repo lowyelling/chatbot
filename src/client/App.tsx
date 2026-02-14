@@ -38,8 +38,9 @@ function App() {
   const [conversationList, setConversationList] = useState<Conversation[]>([])
 
   const navigate = useNavigate()
-  const chatId = useParams().chatId 
-  // console.log('useParams chatId', chatId)
+  const chatId = useParams().chatId
+  const session = authClient.useSession()
+  const isBot = session.data?.user?.email === "chatgpt-bot@bot.local"
 
   useEffect(() => {
     fetchConversationList()
@@ -168,13 +169,13 @@ function App() {
       </Drawer>
 
       <ScrollArea className="h-150 w-full rounded-md border p-4">
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           {messages.map((msg, index) => (
-              <Card key={index} className={msg.role === "user" ? "self-end": "self-start"}>
-                <CardContent className="prose">
+              <div key={index} className={`message-bubble ${msg.role === "user" ? (isBot ? "message-bot" : "message-user") : "message-assistant"}`}>
+                <div className="prose">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
           ))}
         </div>
       </ScrollArea>

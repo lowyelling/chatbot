@@ -93,3 +93,64 @@
   font-weight: 600;
 }
 
+/* iMessage-style bubbles */
+.message-bubble {
+  max-width: 80%;
+  padding: 0.6em 1em;
+  border-radius: 1.1em;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.message-user {
+  align-self: flex-end;
+  background: #007aff;
+  color: white;
+  border-bottom-right-radius: 0.25em;
+}
+
+.message-assistant {
+  align-self: flex-start;
+  background: #e9e9eb;
+  color: #1c1c1e;
+  border-bottom-left-radius: 0.25em;
+}
+
+/* green SMS bubbles for bot (GPT) user — Android-to-iPhone */
+.message-bot {
+  align-self: flex-end;
+  background: #34c759;
+  color: white;
+  border-bottom-right-radius: 0.25em;
+}
+
+/* override prose styles inside blue/green bubbles so links/code stay readable */
+.message-user .prose a,
+.message-bot .prose a {
+  color: white;
+}
+
+.message-user .prose code,
+.message-bot .prose code {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.message-user .prose pre,
+.message-bot .prose pre {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.message-user .prose blockquote,
+.message-bot .prose blockquote {
+  border-left-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* assistant code blocks stay visible against gray */
+.message-assistant .prose code {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.message-assistant .prose pre {
+  background: rgba(0, 0, 0, 0.05);
+}
