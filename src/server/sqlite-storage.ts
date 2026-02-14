@@ -63,7 +63,7 @@ export class SQliteStorage implements Storage {
         if (!row) return null
 
         const messageRows = this.db.prepare(
-            `SELECT role, content FROM messages WHERE conversationId = ? ORDER BY createdAt`
+            `SELECT role, content, createdAt FROM messages WHERE conversationId = ? ORDER BY createdAt`
         ).all(conversationId) as Message[]
 
         return {
@@ -82,7 +82,7 @@ export class SQliteStorage implements Storage {
 
         return rows.map(row => {
             const messages = this.db.prepare(
-                `SELECT role, content FROM messages WHERE conversationId = ? ORDER BY createdAt`
+                `SELECT role, content, createdAt FROM messages WHERE conversationId = ? ORDER BY createdAt`
             ).all(row.id) as Message[]
 
             return {

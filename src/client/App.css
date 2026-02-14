@@ -92,6 +92,33 @@
   font-weight: 600;
 }
 
+/* message rows with hover timestamps */
+.message-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-row-user {
+  align-items: flex-end;
+}
+
+.message-row-assistant {
+  align-items: flex-start;
+}
+
+.message-timestamp {
+  font-size: 0.7rem;
+  color: var(--muted-foreground);
+  margin-top: 0.15em;
+  padding: 0 0.5em;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.message-row:hover .message-timestamp {
+  opacity: 1;
+}
+
 /* iMessage-style bubbles */
 .message-bubble {
   max-width: 80%;

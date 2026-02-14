@@ -102,7 +102,7 @@ function App() {
     setConversationList(prev =>
       prev.map(conv => {
         if (conv.id === targetId) {
-          return { ...conv, messages: [...conv.messages, { role: 'user', content: text }] }
+          return { ...conv, messages: [...conv.messages, { role: 'user', content: text, createdAt: new Date().toISOString() }] }
         }
         return conv
       })
@@ -176,10 +176,17 @@ function App() {
       <ScrollArea className="flex-1 px-4 py-4">
         <div className="flex flex-col gap-2">
           {messages.map((msg, index) => (
-              <div key={index} className={`message-bubble ${msg.role === "user" ? (isBot ? "message-bot" : "message-user") : "message-assistant"}`}>
-                <div className="prose">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+              <div key={index} className={`message-row ${msg.role === "user" ? "message-row-user" : "message-row-assistant"}`}>
+                <div className={`message-bubble ${msg.role === "user" ? (isBot ? "message-bot" : "message-user") : "message-assistant"}`}>
+                  <div className="prose">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                  </div>
                 </div>
+                {msg.createdAt && (
+                  <span className="message-timestamp">
+                    {new Date(msg.createdAt).toLocaleString()}
+                  </span>
+                )}
               </div>
           ))}
         </div>
