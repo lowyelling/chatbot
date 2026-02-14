@@ -133,42 +133,47 @@ function App() {
   const messages = currentConversation?.messages ?? []
 
   return (
+    <div className="h-screen flex flex-col max-w-3xl mx-auto">
 
-    <div className="max-w-2xl mx-auto">
+      {/* Header */}
+      <div className="flex items-center px-4 py-3 border-b">
+        <div className="flex items-center gap-2 flex-1">
+          <Drawer direction="left">
+            <DrawerTrigger asChild>
+              <Button variant="outline" size="sm">Conversations</Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Conversations</DrawerTitle>
+                <DrawerDescription>Select or start a conversation</DrawerDescription>
+              </DrawerHeader>
+              <div className="flex flex-col gap-2 p-4">
+                <Button onClick={() => handleNewConversation()}>New Conversation</Button>
+                {conversationList.map(conv => (
+                  <Button
+                    key={conv.id}
+                    variant={conv.id === chatId ? "default" : "outline"}
+                    onClick={() => navigate(`/chat/${conv.id}`)}
+                    className="justify-start text-left truncate"
+                  >
+                    {conv.title || conv.id.slice(0, 8) + "..."}
+                  </Button>
+                ))}
+              </div>
+            </DrawerContent>
+          </Drawer>
+          <Button variant="outline" size="sm" onClick={() => navigate("/new")}>New Chat</Button>
+        </div>
 
-      <h1 className="text-2xl font-bold text-center mb-4">Lily's chatbot</h1>
+        <h1 className="text-lg font-bold">❤️ Lily's Chatbot 🤖</h1>
 
-      <Button onClick={()=>handleLogout()}>Logout</Button>
+        <div className="flex-1 flex justify-end">
+          <Button variant="ghost" size="sm" onClick={() => handleLogout()}>Logout</Button>
+        </div>
+      </div>
 
-      <br></br>
-      <br></br>
-
-      <Drawer direction="left">
-        <DrawerTrigger asChild>
-          <Button variant="outline">Conversations</Button>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Conversations</DrawerTitle>
-            <DrawerDescription>Select or start a conversation</DrawerDescription>
-          </DrawerHeader>
-          <div className="flex flex-col gap-2 p-4">
-            <Button onClick={() => handleNewConversation()}>New Conversation</Button>
-            {conversationList.map(conv => (
-              <Button
-                key={conv.id}
-                variant={conv.id === chatId ? "default" : "outline"}
-                onClick={() => navigate(`/chat/${conv.id}`)}
-                className="justify-start text-left truncate"
-              >
-                {conv.title || conv.id.slice(0, 8) + "..."}
-              </Button>
-            ))}
-          </div>
-        </DrawerContent>
-      </Drawer>
-
-      <ScrollArea className="h-150 w-full rounded-md border p-4">
+      {/* Messages */}
+      <ScrollArea className="flex-1 px-4 py-4">
         <div className="flex flex-col gap-2">
           {messages.map((msg, index) => (
               <div key={index} className={`message-bubble ${msg.role === "user" ? (isBot ? "message-bot" : "message-user") : "message-assistant"}`}>
@@ -180,14 +185,23 @@ function App() {
         </div>
       </ScrollArea>
 
-      <Textarea
-        id="box"
-        name="box"
-        value={text}
-        onChange={(event: React.ChangeEvent<HTMLTextAreaElement>)=>setText(event.target.value)}
-      />
-      <div className="flex-col items-center justify-center">
-        <Button onClick={()=>handleSend()}>Send</Button>
+      {/* Input */}
+      <div className="px-4 py-3 border-t flex gap-2 items-end">
+        <Textarea
+          id="box"
+          name="box"
+          placeholder="Send a message..."
+          value={text}
+          className="flex-1 min-h-[2.5rem] max-h-40 resize-none"
+          onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setText(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault()
+              handleSend()
+            }
+          }}
+        />
+        <Button onClick={() => handleSend()}>Send</Button>
       </div>
 
     </div>
