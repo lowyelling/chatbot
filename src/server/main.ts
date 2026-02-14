@@ -87,7 +87,10 @@ app.post("/api/chat", requireAuth, (req, res) => {
       console.log('conversation.messages 2:', conversation!.messages)
       res.json(message)
     }
-    main().catch(console.error)
+    main().catch(err => {
+      console.error(err)
+      if (!res.headersSent) res.status(500).json({ error: err.message ?? "Internal error" })
+    })
   })
 
 
