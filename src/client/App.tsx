@@ -156,7 +156,12 @@ function App() {
                     onClick={() => navigate(`/chat/${conv.id}`)}
                     className="justify-start text-left truncate"
                   >
-                    {conv.title || conv.id.slice(0, 8) + "..."}
+                    {(() => {
+                      const date = new Date(conv.createdAt)
+                      const dateStr = `${date.getMonth() + 1}/${date.getDate()}/${String(date.getFullYear()).slice(2)}`
+                      const preview = conv.messages[0]?.content.slice(0, 30) || "New conversation"
+                      return `${dateStr} - ${preview}${conv.messages[0]?.content.length > 30 ? "..." : ""}`
+                    })()}
                   </Button>
                 ))}
               </div>
