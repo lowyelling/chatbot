@@ -22,6 +22,7 @@ export interface Storage {
     getConversation(conversationId: string, userId: string): Conversation | null
     getConversations(userId: string): Conversation[]
     addMessagetoConversation(conversationId: string, userId: string, message: Message): void // function doesn't return anything, it produces side effect
+    updateConversationTitle(conversationId: string, userId: string, title: string): void
 }
 
 
@@ -64,5 +65,13 @@ export class inMemoryStorage implements Storage {
         if (!conversation || conversation.userId !== userId){
            throw new Error("conversation doesn't exist")
         } else conversation.messages.push(message) // no need for conversation?. optional chaining
+    }
+
+    updateConversationTitle(conversationId: string, userId: string, title: string){
+        let conversation = this.conversations.get(conversationId)
+        if (!conversation || conversation.userId !== userId){
+           throw new Error("conversation doesn't exist")
+        }
+        conversation.title = title
     }
 }
