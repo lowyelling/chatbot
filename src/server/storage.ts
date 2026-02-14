@@ -2,7 +2,8 @@ import { randomUUID } from "crypto"
 
 export type Message = {
   role: 'user' | 'assistant';
-  content: string
+  content: string;
+  createdAt?: string;
 }
 
 

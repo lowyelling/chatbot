@@ -1,5 +1,5 @@
 // Experiment 10 — Frontier models: GPT-5.2 + Claude Opus 4.6, both know they're AI
-// Run with: bun scripts/bot-exp10.ts 2>&1 | tee scripts/bot-output_10_frontier.txt
+// Run with: bun scripts/bot-exp10.ts 2>&1 | tee scripts/bot-output_12_frontier.txt
 // NOTE: requires server change to accept model override (already done in main.ts)
 // NOTE: this will be significantly more expensive per turn than previous experiments
 
