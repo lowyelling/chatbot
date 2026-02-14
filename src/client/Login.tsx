@@ -7,29 +7,21 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 
 function Login(){
     const navigate = useNavigate()
-    // state for email, password, and whether user is signing up or signing in (boolean like isSignUp)
-    // use useNavigate for redirecting after success
 
-    const [email, setEmail] = useState("") // to wire up Input as controlled input
-    const [password, setPassword] = useState("") // to wire up Input as controlled input
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const [isSignUp, setIsSignUp] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    // check if already logged in
-    const session = authClient.useSession() 
-    // console.log('session:', session)
+    const session = authClient.useSession()
     const data = session.data
-    // console.log('data.session:', data)
 
     useEffect(() => {
         if (data) navigate("/new")
@@ -37,29 +29,28 @@ function Login(){
 
     async function signIn(){
         await authClient.signIn.email({
-            email, // user email address
-            password // user password -> min 8 characters as default
+            email,
+            password
         }, {
             onSuccess: () => navigate("/new"),
-            onError: (ctx) => setError(ctx.error.message) //ctx = context, an Object passed to callback with ctx.error.message or .status etc
+            onError: (ctx) => setError(ctx.error.message)
         })
     }
 
     async function signUp(){
         await authClient.signUp.email({
-            email, // user email address
-            password, // user password -> min 8 characters as default
+            email,
+            password,
             name: email
         }, {
             onSuccess: () => navigate("/new"),
-            onError: (ctx)=>setError(ctx.error.message)
-        }         
-        )
+            onError: (ctx) => setError(ctx.error.message)
+        })
     }
 
     async function signWithGitHub(){
-        await authClient.signIn.social({ 
-            provider: "github", 
+        await authClient.signIn.social({
+            provider: "github",
             callbackURL: "/new"
         })
     }
@@ -70,44 +61,45 @@ function Login(){
     }
 
     return (
-        <>
-        <h1 className="text-3xl font-bold text-center mb-4">Lily's chatbot</h1>
-
-        {isSignUp ? 
-
-            (
-                <div>
-                    <h1 className="text-2xl font-bold text-center mb-4">Sign Up</h1>
-                    <form onSubmit={handleSubmit}>
-                        <Input type="email" placeholder="Email" value={email} autoComplete="email" onChange={(event)=>setEmail(event.target.value)}/>
-                        <Input type="password" placeholder="Password" value={password} autoComplete="current-password" onChange={(event)=>setPassword(event.target.value)}/>
-                        {error && <p className="text-red-500">{error}</p>}    
-                        <Button type="submit">Sign Up</Button>
+        <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+            <Card className="w-full max-w-sm">
+                <CardContent className="py-2">
+                    <h1 className="text-3xl font-bold text-center">❤️ Lily's Chatbot 🤖</h1>
+                </CardContent>
+            </Card>
+            <Card className="w-full max-w-sm">
+                <CardHeader>
+                    <CardTitle className="text-2xl text-center">
+                        {isSignUp ? "Sign Up" : "Sign In"}
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                        <Input type="email" placeholder="Email" value={email} autoComplete="email" onChange={(event) => setEmail(event.target.value)} />
+                        <Input type="password" placeholder="Password" value={password} autoComplete="current-password" onChange={(event) => setPassword(event.target.value)} />
+                        {error && <p className="text-red-500 text-sm">{error}</p>}
+                        <Button type="submit" className="w-full">{isSignUp ? "Sign Up" : "Sign In"}</Button>
                     </form>
-                </div>
-            )
 
-        :
-        
-            (
-                <div>
-                    <h1 className="text-2xl font-bold text-center mb-4">Login</h1>
-                    <form onSubmit={handleSubmit}>
-                        <Input type="email" placeholder="Email" value={email} autoComplete="email" onChange={(event)=>setEmail(event.target.value)}/>
-                        <Input type="password" placeholder="Password" value={password} autoComplete="current-password" onChange={(event)=>setPassword(event.target.value)}/>
-                        {error && <p className="text-red-500">{error}</p>}    
-                        <Button type="submit">Login</Button>
-                    </form>
-                </div>
-            )
-        }
+                    <div className="flex items-center gap-3">
+                        <div className="h-px flex-1 bg-border" />
+                        <span className="text-muted-foreground text-sm">or</span>
+                        <div className="h-px flex-1 bg-border" />
+                    </div>
 
-        <Button onClick={()=>signWithGitHub()}>{isSignUp ? "Sign Up" : "Sign In"} with Github</Button>
-        <button onClick={()=> setIsSignUp(prev=>!prev)}>
-            {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
-        </button>
-        </>
+                    <Button variant="outline" className="w-full" onClick={() => signWithGitHub()}>
+                        {isSignUp ? "Sign Up" : "Sign In"} with GitHub
+                    </Button>
 
+                    <button
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                        onClick={() => setIsSignUp(prev => !prev)}
+                    >
+                        {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+                    </button>
+                </CardContent>
+            </Card>
+        </div>
     )
 }
 
