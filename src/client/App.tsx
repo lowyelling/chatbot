@@ -1,6 +1,8 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {type Conversation} from "../server/storage.js"
 import { authClient } from "../lib/auth-client"
 
@@ -167,10 +169,10 @@ function App() {
 
       <ScrollArea className="h-150 w-full rounded-md border p-4">
         <div className="flex flex-col">
-          {messages.map((msg, index) => ( 
+          {messages.map((msg, index) => (
               <Card key={index} className={msg.role === "user" ? "self-end": "self-start"}>
-                <CardContent>
-                    <p>{msg.content}</p>
+                <CardContent className="prose">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                 </CardContent>
               </Card>
           ))}
